@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    tags: [ v* ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: "Prepare repository"
+        uses: actions/checkout@v4
+
+      - name: "Run build"
+        run: |
+          wget -O source.tar.gz 'https://github.com/DrKLO/Telegram/archive/'$(cat base.txt)'.tar.gz'
+          tar xvf source.tar.gz
+          mv -T Telegram-* Telegram
+
+          cd Telegram
+          docker run --rm -v "$(pwd):/home/source" $(docker build -q .)
+          cd ..
+
+          cp Telegram/TMessagesProj/build/outputs/apk/afat/release/app.apk Telegram-${{ github.ref_name }}.apk
+
+      - name: "Create release for tag"
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            Telegram-${{ github.ref_name }}.apk
