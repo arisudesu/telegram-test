@@ -19,6 +19,10 @@ jobs:
           tar xf source.tar.gz
           mv -T Telegram-* Telegram
 
+          for p in *.patch; do
+            patch -d Telegram -p1 < "$p"
+          done
+
           cd Telegram
           docker build -t telegram-builder .
           docker run --rm -v "$(pwd):/home/source" telegram-builder

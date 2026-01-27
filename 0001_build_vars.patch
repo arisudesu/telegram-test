@@ -1,0 +1,15 @@
+diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java b/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
+index 93bdfd96e..6e14691ac 100644
+--- a/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
++++ b/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
+@@ -29,8 +29,8 @@ public class BuildVars {
+     // works only on official app ids, disable on your forks
+     public static boolean SUPPORTS_PASSKEYS = true;
+ 
+-    public static int APP_ID = 4;
+-    public static String APP_HASH = "014b35b6184100b085b0d0572f9b5103";
++    public static int APP_ID = 16623;
++    public static String APP_HASH = "8c9dbfe58437d1739540f5d53c72ae4b";
+ 
+     // SafetyNet key for Google Identity SDK, set it to empty to disable
+     public static String SAFETYNET_KEY = "AIzaSyDqt8P-7F7CPCseMkOiVRgb1LY8RN1bvH8";
