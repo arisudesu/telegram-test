@@ -15,12 +15,13 @@ jobs:
 
       - name: "Run build"
         run: |
-          wget -O source.tar.gz 'https://github.com/DrKLO/Telegram/archive/'$(cat base.txt)'.tar.gz'
-          tar xvf source.tar.gz
+          wget -nv -O source.tar.gz 'https://github.com/DrKLO/Telegram/archive/'$(cat base.txt)'.tar.gz'
+          tar xf source.tar.gz
           mv -T Telegram-* Telegram
 
           cd Telegram
-          docker run --rm -v "$(pwd):/home/source" $(docker build -q .)
+          docker build -t telegram-builder .
+          docker run --rm -v "$(pwd):/home/source" telegram-builder
           cd ..
 
           cp Telegram/TMessagesProj/build/outputs/apk/afat/release/app.apk Telegram-${{ github.ref_name }}.apk
