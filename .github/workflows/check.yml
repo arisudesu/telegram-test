@@ -1,0 +1,62 @@
+name: Check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 3,15 * * *
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Prepare master"
+        uses: actions/checkout@v4
+
+      - name: "Run check"
+        id: check
+
+        run: |
+          GRAPHQL_QUERY='{
+            repository(owner: "DrKLO", name: "Telegram") {
+              object(expression: "master") {
+                ... on Commit {
+                  file(path: "gradle.properties") { object { ... on Blob { text } } }
+                  blame(path: "gradle.properties") { ranges { startingLine endingLine commit { oid } } }
+                }
+              }
+            }
+          }'
+
+          GRAPHQL_INFO=$(curl -s 'https://api.github.com/graphql' -H 'Authorization: bearer ${{ secrets.GITHUB_TOKEN }}' -d "$(echo "$GRAPHQL_QUERY" | jq -Rs '{query: .}')")
+
+          APP_VERSION_NAME=$(echo "$GRAPHQL_INFO" | jq -r '.data.repository.object.file.object.text' | grep 'APP_VERSION_NAME=' | cut -d= -f2)
+          APP_VERSION_LINE=$(echo "$GRAPHQL_INFO" | jq -r '.data.repository.object.file.object.text' | grep -n 'APP_VERSION_NAME=' | cut -d: -f1)
+          APP_VERSION_REV=$(echo "$GRAPHQL_INFO" | jq -r '.data.repository.object.blame.ranges[] | select(.startingLine <= '"$APP_VERSION_LINE"' and '"$APP_VERSION_LINE"' <= .endingLine) | .commit.oid')
+
+          echo "Version in master: v$APP_VERSION_NAME, from revision: $APP_VERSION_REV"
+
+          THEIRS="v$APP_VERSION_NAME"
+          MY=$(curl -s 'https://api.github.com/repos/${{ github.repository }}/releases/latest' | jq -r '.tag_name')
+
+          echo "My release: $MY, theirs: $THEIRS"
+
+          [ "$THEIRS" = "$MY" ] && exit 0
+
+          echo "$APP_VERSION_REV" > base.txt
+          git add base.txt
+
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          git commit --allow-empty -m "Trigger release of $THEIRS"
+          git tag "$THEIRS"
+          git push --atomic origin master "$THEIRS"
+
+          echo "tag=$THEIRS" >> "$GITHUB_OUTPUT"
+
+      - name: "Run build workflow"
+        if: steps.check.outputs.tag
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: build.yml
+          ref: refs/tags/${{ steps.check.outputs.tag }}
