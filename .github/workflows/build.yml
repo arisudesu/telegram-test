@@ -26,6 +26,18 @@ jobs:
             patch -d Telegram -p1 < "$p"
           done
 
+          APP_VERSION_CODE=$(
+            version='${{ github.ref_name }}'
+            set -- $(echo "${version#v}" | tr '.' ' ')
+            echo $(( $1*1000000 + $2*10000 + $3*100 + $4 ))
+          )
+          echo "APP_VERSION_CODE=$APP_VERSION_CODE"
+          echo "APP_VERSION_NAME=$APP_VERSION_NAME"
+          sed -i Telegram/gradle.properties -e '
+            s/^\(APP_VERSION_CODE=\).*$/\1'$APP_VERSION_CODE'/
+            s/^\(APP_VERSION_NAME=\).*$/\1'$APP_VERSION_NAME'/
+          '
+
           cd Telegram
           docker build -t telegram-builder .
           docker run --rm -v "$(pwd):/home/source" telegram-builder
