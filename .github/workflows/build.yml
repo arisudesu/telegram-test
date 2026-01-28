@@ -26,16 +26,21 @@ jobs:
             patch -d Telegram -p1 < "$p"
           done
 
-          APP_VERSION_CODE=$(
+          version_name=$(
             version='${{ github.ref_name }}'
-            set -- $(echo "${version#v}" | tr '.' ' ')
+            echo "${version#v}"
+          )
+          version_code=$(
+            set -- $(echo "$version_name" | tr '.' ' ')
             echo $(( $1*1000000 + $2*10000 + $3*100 + $4 ))
           )
-          echo "APP_VERSION_CODE=$APP_VERSION_CODE"
-          echo "APP_VERSION_NAME=$APP_VERSION_NAME"
+
+          echo "APP_VERSION_NAME=$version_name"
+          echo "APP_VERSION_CODE=$version_code"
+
           sed -i Telegram/gradle.properties -e '
-            s/^\(APP_VERSION_CODE=\).*$/\1'$APP_VERSION_CODE'/
-            s/^\(APP_VERSION_NAME=\).*$/\1'$APP_VERSION_NAME'/
+            s/^\(APP_VERSION_NAME=\).*$/\1'$version_name'/
+            s/^\(APP_VERSION_CODE=\).*$/\1'$version_code'/
           '
 
           cd Telegram
