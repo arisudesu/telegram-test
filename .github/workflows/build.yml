@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
+      - name: "Free Disk Space"
+        uses: jlumbroso/free-disk-space@v1
+
       - name: "Prepare repository"
         uses: actions/checkout@v4
 
