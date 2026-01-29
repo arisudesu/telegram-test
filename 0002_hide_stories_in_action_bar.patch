@@ -1,0 +1,16 @@
+diff --git a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
+index a0cf0ae3c..e48efae2d 100644
+--- a/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
++++ b/TMessagesProj/src/main/java/org/telegram/ui/DialogsActivity.java
+@@ -12899,9 +12899,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
+         boolean onlySelfStories = !isArchive() && getStoriesController().hasOnlySelfStories();
+         boolean newVisibility;
+         if (isArchive()) {
+-            newVisibility = !getStoriesController().getHiddenList().isEmpty();
++            newVisibility = !getStoriesController().getHiddenList().isEmpty() && false;
+         } else {
+-            newVisibility = !onlySelfStories && getStoriesController().hasStories();
++            newVisibility = !onlySelfStories && getStoriesController().hasStories() && false;
+             onlySelfStories = getStoriesController().hasOnlySelfStories();
+         }
+ 
