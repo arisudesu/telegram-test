@@ -1,11 +1,11 @@
 diff --git a/TMessagesProj/build.gradle b/TMessagesProj/build.gradle
-index ea8911bb1..58c9f4c05 100644
+index 8884b37fa..3629424a7 100644
 --- a/TMessagesProj/build.gradle
 +++ b/TMessagesProj/build.gradle
-@@ -223,7 +223,7 @@ def getProps(String propName) {
-         return "";
-     }
+@@ -231,7 +231,7 @@ android {
+     namespace 'org.telegram.messenger'
  }
+ 
 -apply plugin: 'com.google.gms.google-services'
 +//apply plugin: 'com.google.gms.google-services'
  
@@ -204,7 +204,7 @@ index 640e841b2..b1a4f40c2 100644
        },
        "oauth_client": [
 diff --git a/gradle.properties b/gradle.properties
-index 6bb315db1..b958fa13c 100644
+index d4aefb394..109ed7d0b 100644
 --- a/gradle.properties
 +++ b/gradle.properties
 @@ -15,7 +15,7 @@
