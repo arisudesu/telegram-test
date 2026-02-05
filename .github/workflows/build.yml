@@ -23,6 +23,7 @@ jobs:
           mv -T Telegram-* Telegram
 
           for p in *.patch; do
+            echo "$p"
             patch -d Telegram -p1 < "$p"
           done
 
