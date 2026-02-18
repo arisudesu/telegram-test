@@ -2,6 +2,7 @@ diff --git a/gradle.properties b/gradle.properties
 index e17718980..ed92b1e2b 100644
 --- a/gradle.properties
 +++ b/gradle.properties
-@@ -18 +18 @@ APP_VERSION_NAME=12.4.1
+@@ -18,2 +18,2 @@ APP_VERSION_NAME=12.4.1
 -APP_PACKAGE=org.telegram.messenger
 +APP_PACKAGE=dev.arisu.telegram
+ IS_PRIVATE=false
