@@ -24,7 +24,7 @@ jobs:
 
           for p in *.patch; do
             echo "$p"
-            patch -d Telegram -p1 < "$p"
+            git apply --directory Telegram -p 1 "$p"
           done
 
           version_name=$(
