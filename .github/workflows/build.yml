@@ -53,7 +53,7 @@ jobs:
             echo "TELEGRAM_APP_HASH=${{ secrets.TELEGRAM_APP_HASH }}"
           ) > Telegram/local.properties
 
-          wget -nv -O Telegram/keystore.jks --header "Authorization: token ${{ secrets.RELEASE_STORE_REPO_PAT }}" 'https://raw.githubusercontent.com/arisudesu/android-keystore/master/keystore.jks'
+          wget -nv -O Telegram/keystore.jks --header "Authorization: token ${{ secrets.RELEASE_STORE_REPO_PAT }}" 'https://raw.githubusercontent.com/arisudesu/android-keystores/master/dev.arisu.telegram.jks'
 
           cd Telegram
           docker build -t telegram-builder .
