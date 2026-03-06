@@ -18,7 +18,7 @@ jobs:
 
       - name: "Run build"
         run: |
-          wget -nv -O source.tar.gz 'https://github.com/DrKLO/Telegram/archive/'$(cat base.txt)'.tar.gz'
+          wget -nv -O source.tar.gz "https://github.com/DrKLO/Telegram/archive/$(cat base.txt).tar.gz"
           tar xf source.tar.gz
           mv -T Telegram-* Telegram
 
@@ -43,6 +43,17 @@ jobs:
             s/^\(APP_VERSION_NAME=\).*$/\1'$version_name'/
             s/^\(APP_VERSION_CODE=\).*$/\1'$version_code'/
           '
+
+          (
+            echo "RELEASE_STORE_FILE=keystore.jks"
+            echo "RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }}"
+            echo "RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}"
+            echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}"
+            echo "TELEGRAM_APP_ID=${{ secrets.TELEGRAM_APP_ID }}"
+            echo "TELEGRAM_APP_HASH=${{ secrets.TELEGRAM_APP_HASH }}"
+          ) > Telegram/local.properties
+
+          wget -nv -O Telegram/keystore.jks --header "Authorization: token ${{ secrets.RELEASE_STORE_REPO_PAT }}" 'https://raw.githubusercontent.com/arisudesu/android-keystore/main/keystore.jks'
 
           cd Telegram
           docker build -t telegram-builder .
