@@ -14,7 +14,7 @@ jobs:
         uses: jlumbroso/free-disk-space@v1.3.1
 
       - name: "Prepare repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: "Run build"
         run: |
@@ -22,10 +22,12 @@ jobs:
           tar xf source.tar.gz
           mv -T Telegram-* Telegram
 
-          for p in *.patch; do
+          for p in patches/*.patch; do
             echo "$p"
             git apply --directory Telegram -p 1 "$p"
           done
+
+          wget -nv -O Telegram/keystore.jks --header "Authorization: token ${{ secrets.RELEASE_STORE_REPO_PAT }}" 'https://raw.githubusercontent.com/arisudesu/android-keystores/master/dev.arisu.telegram.jks'
 
           version_name=$(
             version='${{ github.ref_name }}'
@@ -44,26 +46,22 @@ jobs:
             s/^\(APP_VERSION_CODE=\).*$/\1'$version_code'/
           '
 
-          (
-            echo "RELEASE_STORE_FILE=keystore.jks"
-            echo "RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }}"
-            echo "RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}"
-            echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}"
-            echo "TELEGRAM_APP_ID=${{ secrets.TELEGRAM_APP_ID }}"
-            echo "TELEGRAM_APP_HASH=${{ secrets.TELEGRAM_APP_HASH }}"
-          ) > Telegram/local.properties
-
-          wget -nv -O Telegram/keystore.jks --header "Authorization: token ${{ secrets.RELEASE_STORE_REPO_PAT }}" 'https://raw.githubusercontent.com/arisudesu/android-keystores/master/dev.arisu.telegram.jks'
-
           cd Telegram
           docker build -t telegram-builder .
-          docker run --rm -v "$(pwd):/home/source" telegram-builder
+          docker run --rm -v "$(pwd):/home/source" \
+              -e ORG_GRADLE_PROJECT_RELEASE_KEYSTORE_FILE=keystore.jks \
+              -e ORG_GRADLE_PROJECT_RELEASE_KEYSTORE_PASSWORD="${{ secrets.RELEASE_STORE_PASSWORD }}" \
+              -e ORG_GRADLE_PROJECT_RELEASE_KEY_ALIAS=dev.arisu.telegram \
+              -e ORG_GRADLE_PROJECT_RELEASE_KEY_PASSWORD="${{ secrets.RELEASE_KEY_PASSWORD }}" \
+              -e ORG_GRADLE_PROJECT_TELEGRAM_APP_ID="${{ secrets.TELEGRAM_APP_ID }}" \
+              -e ORG_GRADLE_PROJECT_TELEGRAM_APP_HASH="${{ secrets.TELEGRAM_APP_HASH }}" \
+            telegram-builder
           cd ..
 
           cp Telegram/TMessagesProj/build/outputs/apk/afat/release/app.apk Telegram-${{ github.ref_name }}.apk
 
       - name: "Create release for tag"
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             Telegram-${{ github.ref_name }}.apk

@@ -10,11 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Prepare master"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: "Run check"
         id: check
-
         run: |
           GRAPHQL_QUERY='{
             repository(owner: "DrKLO", name: "Telegram") {
