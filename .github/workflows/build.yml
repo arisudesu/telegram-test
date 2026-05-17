@@ -41,14 +41,11 @@ jobs:
           echo "APP_VERSION_NAME=$version_name"
           echo "APP_VERSION_CODE=$version_code"
 
-          sed -i Telegram/gradle.properties -e '
-            s/^\(APP_VERSION_NAME=\).*$/\1'$version_name'/
-            s/^\(APP_VERSION_CODE=\).*$/\1'$version_code'/
-          '
-
           cd Telegram
           docker build -t telegram-builder .
           docker run --rm -v "$(pwd):/home/source" \
+              -e ORG_GRADLE_PROJECT_APP_VERSION_NAME="$version_name" \
+              -e ORG_GRADLE_PROJECT_APP_VERSION_CODE="$version_code" \
               -e ORG_GRADLE_PROJECT_RELEASE_STORE_FILE=keystore.jks \
               -e ORG_GRADLE_PROJECT_RELEASE_STORE_PASSWORD="${{ secrets.RELEASE_STORE_PASSWORD }}" \
               -e ORG_GRADLE_PROJECT_RELEASE_KEY_ALIAS=dev.arisu.telegram \
