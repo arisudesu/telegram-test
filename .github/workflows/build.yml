@@ -49,8 +49,8 @@ jobs:
           cd Telegram
           docker build -t telegram-builder .
           docker run --rm -v "$(pwd):/home/source" \
-              -e ORG_GRADLE_PROJECT_RELEASE_KEYSTORE_FILE=keystore.jks \
-              -e ORG_GRADLE_PROJECT_RELEASE_KEYSTORE_PASSWORD="${{ secrets.RELEASE_STORE_PASSWORD }}" \
+              -e ORG_GRADLE_PROJECT_RELEASE_STORE_FILE=keystore.jks \
+              -e ORG_GRADLE_PROJECT_RELEASE_STORE_PASSWORD="${{ secrets.RELEASE_STORE_PASSWORD }}" \
               -e ORG_GRADLE_PROJECT_RELEASE_KEY_ALIAS=dev.arisu.telegram \
               -e ORG_GRADLE_PROJECT_RELEASE_KEY_PASSWORD="${{ secrets.RELEASE_KEY_PASSWORD }}" \
               -e ORG_GRADLE_PROJECT_TELEGRAM_APP_ID="${{ secrets.TELEGRAM_APP_ID }}" \
