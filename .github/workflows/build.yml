@@ -25,16 +25,18 @@ jobs:
           ref: ${{ steps.get-revision.outputs.rev }}
           submodules: recursive
 
-      - name: "Free disk space"
-        uses: jlumbroso/free-disk-space@v1.3.1
-
-      - name: "Run build"
+      - name: "Apply patches"
         run: |
           for p in patches/*.patch; do
             echo "$p"
             git apply --directory Telegram -p 1 "$p"
           done
 
+      - name: "Free disk space"
+        uses: jlumbroso/free-disk-space@v1.3.1
+
+      - name: "Run build"
+        run: |
           wget -nv -O Telegram/keystore.jks --header "Authorization: token ${{ secrets.RELEASE_STORE_REPO_PAT }}" 'https://raw.githubusercontent.com/arisudesu/android-keystores/master/dev.arisu.telegram.jks'
 
           version_name=$(
