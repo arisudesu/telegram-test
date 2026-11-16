@@ -50,8 +50,8 @@ jobs:
               -e ORG_GRADLE_PROJECT_RELEASE_STORE_PASSWORD="${{ secrets.RELEASE_STORE_PASSWORD }}" \
               -e ORG_GRADLE_PROJECT_RELEASE_KEY_ALIAS=dev.arisu.telegram \
               -e ORG_GRADLE_PROJECT_RELEASE_KEY_PASSWORD="${{ secrets.RELEASE_KEY_PASSWORD }}" \
-              -e ORG_GRADLE_PROJECT_TELEGRAM_APP_ID="${{ secrets.TELEGRAM_APP_ID }}" \
-              -e ORG_GRADLE_PROJECT_TELEGRAM_APP_HASH="${{ secrets.TELEGRAM_APP_HASH }}" \
+              -e ORG_GRADLE_PROJECT_TELEGRAM_API_ID="${{ secrets.TELEGRAM_APP_ID }}" \
+              -e ORG_GRADLE_PROJECT_TELEGRAM_API_HASH="${{ secrets.TELEGRAM_APP_HASH }}" \
             telegram-builder
           cd ..
 

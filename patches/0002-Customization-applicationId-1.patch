@@ -1,0 +1,369 @@
+diff --git a/TMessagesProj/build.gradle b/TMessagesProj/build.gradle
+index 72f3e4c05..dcc2aade9 100644
+--- a/TMessagesProj/build.gradle
++++ b/TMessagesProj/build.gradle
+@@ -248,7 +248,7 @@ def getProps(String propName) {
+         return "";
+     }
+ }
+-apply plugin: 'com.google.gms.google-services'
++//apply plugin: 'com.google.gms.google-services'
+ 
+ task checkVisibility {
+     doFirst {
+diff --git a/TMessagesProj/google-services.json b/TMessagesProj/google-services.json
+index 640e841b2..b1a4f40c2 100644
+--- a/TMessagesProj/google-services.json
++++ b/TMessagesProj/google-services.json
+@@ -10,7 +10,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:f6afd7b67eae3860",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger"
++          "package_name": "dev.arisu.telegram"
+         }
+       },
+       "oauth_client": [
+@@ -39,7 +39,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:dc022572c167a16c",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger.beta"
++          "package_name": "dev.arisu.telegram.beta"
+         }
+       },
+       "oauth_client": [
+@@ -68,7 +68,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:7396e651423888c3f66e22",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger.web"
++          "package_name": "dev.arisu.telegram.web"
+         }
+       },
+       "oauth_client": [
+diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/ApplicationLoader.java b/TMessagesProj/src/main/java/org/telegram/messenger/ApplicationLoader.java
+index 29f10b394..68c87d98f 100644
+--- a/TMessagesProj/src/main/java/org/telegram/messenger/ApplicationLoader.java
++++ b/TMessagesProj/src/main/java/org/telegram/messenger/ApplicationLoader.java
+@@ -171,7 +171,7 @@ public class ApplicationLoader extends Application {
+         } catch (Exception e) {
+             FileLog.e(e);
+         }
+-        return new File("/data/data/org.telegram.messenger/files");
++        return new File("/data/data/dev.arisu.telegram/files");
+     }
+ 
+     public static File getFilesDirFixed(String child) {
+diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java b/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
+index a703bae5d..b84522f07 100644
+--- a/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
++++ b/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
+@@ -84,7 +84,7 @@ public class BuildVars {
+     private static Boolean betaApp;
+     public static boolean isBetaApp() {
+         if (betaApp == null) {
+-            betaApp = ApplicationLoader.applicationContext != null && "org.telegram.messenger.beta".equals(ApplicationLoader.applicationContext.getPackageName());
++            betaApp = ApplicationLoader.applicationContext != null && "dev.arisu.telegram.beta".equals(ApplicationLoader.applicationContext.getPackageName());
+         }
+         return betaApp;
+     }
+diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java b/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java
+index a350abf48..033dc00d0 100644
+--- a/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java
++++ b/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java
+@@ -391,7 +391,7 @@ public class ContactsController extends BaseController {
+         Utilities.globalQueue.postRunnable(() -> {
+             AccountManager am = AccountManager.get(ApplicationLoader.applicationContext);
+             try {
+-                Account[] accounts = am.getAccountsByType("org.telegram.messenger");
++                Account[] accounts = am.getAccountsByType("dev.arisu.telegram");
+                 for (int a = 0; a < accounts.length; a++) {
+                     Account acc = accounts[a];
+                     boolean found = false;
+@@ -423,7 +423,7 @@ public class ContactsController extends BaseController {
+                 readContacts();
+                 if (systemAccount == null) {
+                     try {
+-                        systemAccount = new Account("" + getUserConfig().getClientUserId(), "org.telegram.messenger");
++                        systemAccount = new Account("" + getUserConfig().getClientUserId(), "dev.arisu.telegram");
+                         am.addAccountExplicitly(systemAccount, "", null);
+                     } catch (Exception ignore) {
+ 
+@@ -437,7 +437,7 @@ public class ContactsController extends BaseController {
+         try {
+             systemAccount = null;
+             AccountManager am = AccountManager.get(ApplicationLoader.applicationContext);
+-            Account[] accounts = am.getAccountsByType("org.telegram.messenger");
++            Account[] accounts = am.getAccountsByType("dev.arisu.telegram");
+             for (int a = 0; a < accounts.length; a++) {
+                 Account acc = accounts[a];
+                 boolean found = false;
+@@ -513,7 +513,7 @@ public class ContactsController extends BaseController {
+                 AndroidUtilities.runOnUIThread(() -> {
+                     AccountManager am = AccountManager.get(ApplicationLoader.applicationContext);
+                     try {
+-                        Account[] accounts = am.getAccountsByType("org.telegram.messenger");
++                        Account[] accounts = am.getAccountsByType("dev.arisu.telegram");
+                         systemAccount = null;
+                         for (int a = 0; a < accounts.length; a++) {
+                             Account acc = accounts[a];
+@@ -531,7 +531,7 @@ public class ContactsController extends BaseController {
+ 
+                     }
+                     try {
+-                        systemAccount = new Account("" + getUserConfig().getClientUserId(), "org.telegram.messenger");
++                        systemAccount = new Account("" + getUserConfig().getClientUserId(), "dev.arisu.telegram");
+                         am.addAccountExplicitly(systemAccount, "", null);
+                     } catch (Exception ignore) {
+ 
+@@ -2298,7 +2298,7 @@ public class ContactsController extends BaseController {
+ 
+         builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
+         builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+-        builder.withValue(ContactsContract.Data.MIMETYPE, "vnd.android.cursor.item/vnd.org.telegram.messenger.android.profile");
++        builder.withValue(ContactsContract.Data.MIMETYPE, "vnd.android.cursor.item/vnd.dev.arisu.telegram.android.profile");
+         builder.withValue(ContactsContract.Data.DATA1, user.id);
+         builder.withValue(ContactsContract.Data.DATA2, "Telegram Profile");
+         builder.withValue(ContactsContract.Data.DATA3, LocaleController.formatString("ContactShortcutMessage", R.string.ContactShortcutMessage, phoneOrName));
+@@ -2307,7 +2307,7 @@ public class ContactsController extends BaseController {
+ 
+         builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
+         builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+-        builder.withValue(ContactsContract.Data.MIMETYPE, "vnd.android.cursor.item/vnd.org.telegram.messenger.android.call");
++        builder.withValue(ContactsContract.Data.MIMETYPE, "vnd.android.cursor.item/vnd.dev.arisu.telegram.android.call");
+         builder.withValue(ContactsContract.Data.DATA1, user.id);
+         builder.withValue(ContactsContract.Data.DATA2, "Telegram Voice Call");
+         builder.withValue(ContactsContract.Data.DATA3, LocaleController.formatString("ContactShortcutVoiceCall", R.string.ContactShortcutVoiceCall, phoneOrName));
+@@ -2316,7 +2316,7 @@ public class ContactsController extends BaseController {
+ 
+         builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
+         builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+-        builder.withValue(ContactsContract.Data.MIMETYPE, "vnd.android.cursor.item/vnd.org.telegram.messenger.android.call.video");
++        builder.withValue(ContactsContract.Data.MIMETYPE, "vnd.android.cursor.item/vnd.dev.arisu.telegram.android.call.video");
+         builder.withValue(ContactsContract.Data.DATA1, user.id);
+         builder.withValue(ContactsContract.Data.DATA2, "Telegram Video Call");
+         builder.withValue(ContactsContract.Data.DATA3, LocaleController.formatString("ContactShortcutVideoCall", R.string.ContactShortcutVideoCall, phoneOrName));
+diff --git a/TMessagesProj/src/main/res/xml/auth.xml b/TMessagesProj/src/main/res/xml/auth.xml
+index 4dc99f271..8c44fbe84 100644
+--- a/TMessagesProj/src/main/res/xml/auth.xml
++++ b/TMessagesProj/src/main/res/xml/auth.xml
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ 
+ <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:accountType="org.telegram.messenger"
++    android:accountType="dev.arisu.telegram"
+     android:icon="@drawable/ic_launcher_dr"
+     android:smallIcon="@drawable/ic_launcher_dr"
+     android:label="@string/AppName"
+diff --git a/TMessagesProj/src/main/res/xml/auth_menu.xml b/TMessagesProj/src/main/res/xml/auth_menu.xml
+index 98b9a705d..df800a1ad 100644
+--- a/TMessagesProj/src/main/res/xml/auth_menu.xml
++++ b/TMessagesProj/src/main/res/xml/auth_menu.xml
+@@ -6,7 +6,7 @@
+         android:title="@string/AccountSettings"
+         android:summary="">
+         <intent android:action="org.telegram.messenger.OPEN_ACCOUNT"
+-            android:targetPackage="org.telegram.messenger"
++            android:targetPackage="dev.arisu.telegram"
+             android:targetClass="org.telegram.ui.LaunchActivity"/>
+     </PreferenceScreen>
+ </PreferenceScreen>
+diff --git a/TMessagesProj/src/main/res/xml/contacts.xml b/TMessagesProj/src/main/res/xml/contacts.xml
+index 4e094023d..7c28c7bc5 100644
+--- a/TMessagesProj/src/main/res/xml/contacts.xml
++++ b/TMessagesProj/src/main/res/xml/contacts.xml
+@@ -1,17 +1,17 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <ContactsAccountType xmlns:android="http://schemas.android.com/apk/res/android">
+     <ContactsDataKind android:icon="@drawable/ic_launcher_dr"
+-        android:mimeType="vnd.android.cursor.item/vnd.org.telegram.messenger.android.profile"
++        android:mimeType="vnd.android.cursor.item/vnd.dev.arisu.telegram.android.profile"
+         android:summaryColumn="data2"
+         android:detailColumn="data3"
+         android:detailSocialSummary="true"/>
+     <ContactsDataKind android:icon="@drawable/ic_launcher_dr"
+-        android:mimeType="vnd.android.cursor.item/vnd.org.telegram.messenger.android.call"
++        android:mimeType="vnd.android.cursor.item/vnd.dev.arisu.telegram.android.call"
+         android:summaryColumn="data2"
+         android:detailColumn="data3"
+         android:detailSocialSummary="true"/>
+     <ContactsDataKind android:icon="@drawable/ic_launcher_dr"
+-        android:mimeType="vnd.android.cursor.item/vnd.org.telegram.messenger.android.call.video"
++        android:mimeType="vnd.android.cursor.item/vnd.dev.arisu.telegram.android.call.video"
+         android:summaryColumn="data2"
+         android:detailColumn="data3"
+         android:detailSocialSummary="true"/>
+diff --git a/TMessagesProj/src/main/res/xml/sync_contacts.xml b/TMessagesProj/src/main/res/xml/sync_contacts.xml
+index 9e9962e68..59a54ee3e 100644
+--- a/TMessagesProj/src/main/res/xml/sync_contacts.xml
++++ b/TMessagesProj/src/main/res/xml/sync_contacts.xml
+@@ -1,3 +1,3 @@
+ <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
+     android:contentAuthority="com.android.contacts"
+-    android:accountType="org.telegram.messenger"/>
+\ No newline at end of file
++    android:accountType="dev.arisu.telegram"/>
+\ No newline at end of file
+diff --git a/TMessagesProj_App/google-services.json b/TMessagesProj_App/google-services.json
+index 640e841b2..b1a4f40c2 100644
+--- a/TMessagesProj_App/google-services.json
++++ b/TMessagesProj_App/google-services.json
+@@ -10,7 +10,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:f6afd7b67eae3860",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger"
++          "package_name": "dev.arisu.telegram"
+         }
+       },
+       "oauth_client": [
+@@ -39,7 +39,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:dc022572c167a16c",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger.beta"
++          "package_name": "dev.arisu.telegram.beta"
+         }
+       },
+       "oauth_client": [
+@@ -68,7 +68,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:7396e651423888c3f66e22",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger.web"
++          "package_name": "dev.arisu.telegram.web"
+         }
+       },
+       "oauth_client": [
+diff --git a/TMessagesProj_AppHockeyApp/google-services.json b/TMessagesProj_AppHockeyApp/google-services.json
+index 640e841b2..b1a4f40c2 100644
+--- a/TMessagesProj_AppHockeyApp/google-services.json
++++ b/TMessagesProj_AppHockeyApp/google-services.json
+@@ -10,7 +10,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:f6afd7b67eae3860",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger"
++          "package_name": "dev.arisu.telegram"
+         }
+       },
+       "oauth_client": [
+@@ -39,7 +39,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:dc022572c167a16c",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger.beta"
++          "package_name": "dev.arisu.telegram.beta"
+         }
+       },
+       "oauth_client": [
+@@ -68,7 +68,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:7396e651423888c3f66e22",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger.web"
++          "package_name": "dev.arisu.telegram.web"
+         }
+       },
+       "oauth_client": [
+diff --git a/TMessagesProj_AppHuawei/agconnect-services.json b/TMessagesProj_AppHuawei/agconnect-services.json
+index acd65107c..529bf7624 100644
+--- a/TMessagesProj_AppHuawei/agconnect-services.json
++++ b/TMessagesProj_AppHuawei/agconnect-services.json
+@@ -33,7 +33,7 @@
+ 		"project_id":"9105385871708127577",
+ 		"app_id":"101184875",
+ 		"api_key":"DAEDAEehEkTAPVhW2szdQNNLzBVS1Re7Pw98QkLMvgGZaEEUc8JLBVi2qhMh2vWw9h/Yq2PwtSGxZzFrSmLAQIysf7Tvo4BAadcblA==",
+-		"package_name":"org.telegram.messenger"
++		"package_name":"dev.arisu.telegram"
+ 	},
+ 	"oauth_client":{
+ 		"client_id":"101184875",
+@@ -41,7 +41,7 @@
+ 	},
+ 	"app_info":{
+ 		"app_id":"101184875",
+-		"package_name":"org.telegram.messenger"
++		"package_name":"dev.arisu.telegram"
+ 	},
+ 	"service":{
+ 		"analytics":{
+@@ -75,12 +75,12 @@
+ 	"configuration_version":"3.0",
+ 	"appInfos":[
+ 		{
+-			"package_name":"org.telegram.messenger",
++			"package_name":"dev.arisu.telegram",
+ 			"client":{
+ 				"app_id":"101184875"
+ 			},
+ 			"app_info":{
+-				"package_name":"org.telegram.messenger",
++				"package_name":"dev.arisu.telegram",
+ 				"app_id":"101184875"
+ 			},
+ 			"oauth_client":{
+diff --git a/TMessagesProj_AppHuawei/google-services.json b/TMessagesProj_AppHuawei/google-services.json
+index 640e841b2..b1a4f40c2 100644
+--- a/TMessagesProj_AppHuawei/google-services.json
++++ b/TMessagesProj_AppHuawei/google-services.json
+@@ -10,7 +10,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:f6afd7b67eae3860",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger"
++          "package_name": "dev.arisu.telegram"
+         }
+       },
+       "oauth_client": [
+@@ -39,7 +39,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:dc022572c167a16c",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger.beta"
++          "package_name": "dev.arisu.telegram.beta"
+         }
+       },
+       "oauth_client": [
+@@ -68,7 +68,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:7396e651423888c3f66e22",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger.web"
++          "package_name": "dev.arisu.telegram.web"
+         }
+       },
+       "oauth_client": [
+diff --git a/TMessagesProj_AppStandalone/google-services.json b/TMessagesProj_AppStandalone/google-services.json
+index 640e841b2..b1a4f40c2 100644
+--- a/TMessagesProj_AppStandalone/google-services.json
++++ b/TMessagesProj_AppStandalone/google-services.json
+@@ -10,7 +10,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:f6afd7b67eae3860",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger"
++          "package_name": "dev.arisu.telegram"
+         }
+       },
+       "oauth_client": [
+@@ -39,7 +39,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:dc022572c167a16c",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger.beta"
++          "package_name": "dev.arisu.telegram.beta"
+         }
+       },
+       "oauth_client": [
+@@ -68,7 +68,7 @@
+       "client_info": {
+         "mobilesdk_app_id": "1:760348033671:android:7396e651423888c3f66e22",
+         "android_client_info": {
+-          "package_name": "org.telegram.messenger.web"
++          "package_name": "dev.arisu.telegram.web"
+         }
+       },
+       "oauth_client": [
