@@ -21,6 +21,7 @@ jobs:
       - name: "Prepare Telegram sources"
         uses: actions/checkout@v6
         with:
+          path: Telegram
           repository: DrKLO/Telegram
           ref: ${{ steps.get-revision.outputs.rev }}
           submodules: recursive
