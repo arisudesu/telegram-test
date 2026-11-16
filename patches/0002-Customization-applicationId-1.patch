@@ -1,8 +1,8 @@
 diff --git a/TMessagesProj/build.gradle b/TMessagesProj/build.gradle
-index 72f3e4c05..dcc2aade9 100644
+index b1d01cd80..5d8e04403 100644
 --- a/TMessagesProj/build.gradle
 +++ b/TMessagesProj/build.gradle
-@@ -248,7 +248,7 @@ def getProps(String propName) {
+@@ -267,7 +267,7 @@ def getProps(String propName) {
          return "";
      }
  }
@@ -43,10 +43,10 @@ index 640e841b2..b1a4f40c2 100644
        },
        "oauth_client": [
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/ApplicationLoader.java b/TMessagesProj/src/main/java/org/telegram/messenger/ApplicationLoader.java
-index 29f10b394..68c87d98f 100644
+index 4d0a8f5dc..2a0faf60d 100644
 --- a/TMessagesProj/src/main/java/org/telegram/messenger/ApplicationLoader.java
 +++ b/TMessagesProj/src/main/java/org/telegram/messenger/ApplicationLoader.java
-@@ -171,7 +171,7 @@ public class ApplicationLoader extends Application {
+@@ -172,7 +172,7 @@ public class ApplicationLoader extends Application {
          } catch (Exception e) {
              FileLog.e(e);
          }
@@ -56,10 +56,10 @@ index 29f10b394..68c87d98f 100644
  
      public static File getFilesDirFixed(String child) {
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java b/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
-index a703bae5d..b84522f07 100644
+index d59b54c94..9d39b9ea0 100644
 --- a/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
 +++ b/TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
-@@ -84,7 +84,7 @@ public class BuildVars {
+@@ -85,7 +85,7 @@ public class BuildVars {
      private static Boolean betaApp;
      public static boolean isBetaApp() {
          if (betaApp == null) {
@@ -69,7 +69,7 @@ index a703bae5d..b84522f07 100644
          return betaApp;
      }
 diff --git a/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java b/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java
-index a350abf48..033dc00d0 100644
+index 41ce86e17..918e79ad3 100644
 --- a/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java
 +++ b/TMessagesProj/src/main/java/org/telegram/messenger/ContactsController.java
 @@ -391,7 +391,7 @@ public class ContactsController extends BaseController {
@@ -117,7 +117,7 @@ index a350abf48..033dc00d0 100644
                          am.addAccountExplicitly(systemAccount, "", null);
                      } catch (Exception ignore) {
  
-@@ -2298,7 +2298,7 @@ public class ContactsController extends BaseController {
+@@ -2353,7 +2353,7 @@ public class ContactsController extends BaseController {
  
          builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
          builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
@@ -126,7 +126,7 @@ index a350abf48..033dc00d0 100644
          builder.withValue(ContactsContract.Data.DATA1, user.id);
          builder.withValue(ContactsContract.Data.DATA2, "Telegram Profile");
          builder.withValue(ContactsContract.Data.DATA3, LocaleController.formatString("ContactShortcutMessage", R.string.ContactShortcutMessage, phoneOrName));
-@@ -2307,7 +2307,7 @@ public class ContactsController extends BaseController {
+@@ -2362,7 +2362,7 @@ public class ContactsController extends BaseController {
  
          builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
          builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
@@ -135,7 +135,7 @@ index a350abf48..033dc00d0 100644
          builder.withValue(ContactsContract.Data.DATA1, user.id);
          builder.withValue(ContactsContract.Data.DATA2, "Telegram Voice Call");
          builder.withValue(ContactsContract.Data.DATA3, LocaleController.formatString("ContactShortcutVoiceCall", R.string.ContactShortcutVoiceCall, phoneOrName));
-@@ -2316,7 +2316,7 @@ public class ContactsController extends BaseController {
+@@ -2371,7 +2371,7 @@ public class ContactsController extends BaseController {
  
          builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
          builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
