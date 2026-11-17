@@ -16,7 +16,7 @@ jobs:
         id: check
         run: |
           GRAPHQL_QUERY='{
-            repository(owner: "DrKLO", name: "Telegram") {
+            repository(owner: "TelegramMessenger", name: "Telegram-Android") {
               object(expression: "master") {
                 ... on Commit {
                   file(path: "gradle.properties") { object { ... on Blob { text } } }
